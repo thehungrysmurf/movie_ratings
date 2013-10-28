@@ -1,0 +1,19 @@
+Users
+    user_id (INT Primary Key)
+    age (INT)
+    gender (varchar(10))
+    zip_code (varchar(10))
+    email (varchar(100))
+    password(varchar(30))
+
+Ratings
+    rating_id (INT Primary Key)
+    user_id (INT)
+    movie_id (INT)
+    rating (INT)
+
+Movies
+    movie_id (INT Primary Key)
+    title (varchar(30))
+    release_date(datetime)
+    imdb_url (varchar(100))
