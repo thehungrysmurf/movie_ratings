@@ -45,14 +45,20 @@ class Rating(Base):
 
 ### End class declarations
 
-def connect():
-    global ENGINE
-    global Session
+engine = create_engine("sqlite:///ratings.db", echo=False)
+session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush = False))
 
-    ENGINE = create_engine("sqlite:///ratings.db", echo = True)
-    Session = sessionmaker(bind=ENGINE)
+Base = declarative_base()
+Base.query = session.query_property()
 
-    return Session()
+# def connect():
+#     global ENGINE
+#     global Session
+
+#     ENGINE = create_engine("sqlite:///ratings.db", echo = True)
+#     Session = sessionmaker(bind=ENGINE)
+
+#     return Session()
 
 def main():
     """In case we need this for something"""
