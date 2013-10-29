@@ -51,6 +51,21 @@ session = scoped_session(sessionmaker(bind=engine, autocommit = False, autoflush
 Base = declarative_base()
 Base.query = session.query_property()
 
+def authenticate(email, password):
+    user_query = session.query(User).filter_by(email = email).first()
+    if user_query:
+        if password == user_query.password:
+            return True
+        else:
+            return False
+    else:
+        return False
+
+def create_account(email, password, age, gender, zipcode):
+    user = User(email=email, password=password, age=age, zip_code=zipcode, gender=gender)
+    session.add(user)
+    session.commit()
+
 # def connect():
 #     global ENGINE
 #     global Session
