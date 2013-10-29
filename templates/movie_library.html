@@ -1,3 +1,8 @@
 <html>
-<h2>This is the movie library page</h2>
+<h2>Movie Library for user with id # {{user_object.user_id}}</h2>
+<ul>
+{% for rating_object in user_object.ratings %}
+    <li>{{ rating_object.movie.title}} - {{ rating_object.rating }}</li>
+{% endfor %}
+</ul>
 </html>

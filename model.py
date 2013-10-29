@@ -66,14 +66,9 @@ def create_account(email, password, age, gender, zipcode):
     session.add(user)
     session.commit()
 
-# def connect():
-#     global ENGINE
-#     global Session
-
-#     ENGINE = create_engine("sqlite:///ratings.db", echo = True)
-#     Session = sessionmaker(bind=ENGINE)
-
-#     return Session()
+def get_user_object(u_id):
+    user_object = session.query(User).filter_by(user_id=u_id).first()
+    return user_object
 
 def main():
     """In case we need this for something"""
