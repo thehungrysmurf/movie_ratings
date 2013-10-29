@@ -66,10 +66,6 @@ def create_account(email, password, age, gender, zipcode):
     session.add(user)
     session.commit()
 
-def get_user_object(u_id):
-    user_object = session.query(User).filter_by(user_id=u_id).first()
-    return user_object
-
 def main():
     """In case we need this for something"""
     pass

@@ -1,6 +1,8 @@
 from flask import Flask, render_template, redirect, request, flash, session
 import model
 
+from model import session as model_session
+
 app = Flask(__name__)
 app.secret_key = "blahblahblah"
 
@@ -13,8 +15,8 @@ def process_login():
     email = request.form.get("email")
     password = request.form.get("password")
     if model.authenticate(email, password):
-        model.get_user_info(email)
-        return render_template("movie_library.html")
+        user_object = model_session.query(model.User).filter_by(email=email).first()
+        return render_template("movie_library.html", user_object=user_object)
     else:
         flash("Login incorrect!")
         return redirect("/")
@@ -31,18 +33,22 @@ def create_account():
     age = request.form.get("age")
     gender = request.form.get("gender")
     zipcode = request.form.get("zipcode")
-    model.create_account(email, password, age, gender, zipcode)
+
+    user = model.User(email=email, password=password, age=age, zip_code=zipcode, gender=gender)
+    model_session.add(user)
+    model_session.commit()
+
     print "Account created successfully!"
     return redirect("/")
 
 @app.route("/users")
 def view_users():
-    all_users = model.get_all_users()
+    all_users = model_session.query(model.User).all() 
     return render_template("view_users.html", users=all_users)
 
-@app.route("/rating/<id>")
-def view_ratings(id):
-    user_object = model.get_user_object(id)
+@app.route("/rating/<u_id>")
+def view_ratings(u_id):
+    user_object = model_session.query(model.User).filter_by(user_id=u_id).first()
     return render_template("movie_library.html", user_object=user_object)
 
 if __name__=="__main__":
