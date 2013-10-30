@@ -44,19 +44,15 @@ class User(Base):
     def predict_rating(self, movie):
         ratings = self.ratings # ratings object for the user that we want prediction for
         other_ratings = movie.movie_ratings # all rating objects for the movie object
-        other_users = [r.user for r in other_ratings]# list of user objects who rated that movie
+        
+        similarities = [(self.similarity(r.user), r) for r in other_ratings] 
+        # list of tuples of [(similarity, rating object)]
+        
+        similarities.sort(reverse=True) # sorted list starting with [(highest sim, rating object)]
 
-        similarities = [(self.similarity(other_user), other_user) for other_user in other_users] # list of tuples of [(similarity, user_object)]
-        similarities.sort(reverse=True) # sorted list starting with [(highest sim, user obj)]
+        top_user = similarities[1] # tuple of sim, rating object
 
-        top_user = similarities[1] # tuple of sim, user object
-
-        matched_rating = None
-        for rating in other_ratings:
-            if rating.user_id == top_user[1].user_id: # find the rating for that user_id and this movie
-                matched_rating = rating
-                break
-        return matched_rating.rating * top_user[0]  
+        return top_user[1].rating * top_user[0] # rating * similarity
 
 
 class Movie(Base):
