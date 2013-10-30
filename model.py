@@ -6,6 +6,8 @@ from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import relationship, backref
 
+import correlation
+
 ENGINE = None
 Session = None
 

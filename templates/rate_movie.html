@@ -1,6 +1,9 @@
 <html>
 <h2>This is the rating form</h2>
 <form method="POST">
+    {% if movie_object.movie_ratings.rating %}
+    <p>You have already rated this movie: {{movie_object.movie_ratings.rating}}. If you wish to change your rating, fill out the form below.</p>
+    {% endif %}
 <p>Enter a 1-5 rating for the movie: <strong>{{ movie_object.title }}</strong></p>
 <input type="text" name="rating"><br />
 <input type="submit" value="Submit">
