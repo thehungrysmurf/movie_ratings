@@ -16,6 +16,7 @@ def process_login():
     password = request.form.get("password")
     if model.authenticate(email, password):
         user_object = model_session.query(model.User).filter_by(email=email).first()
+        session['id'] = user_object.user_id
         return render_template("movie_library.html", user_object=user_object)
     else:
         flash("Login incorrect!")
@@ -46,10 +47,26 @@ def view_users():
     all_users = model_session.query(model.User).all() 
     return render_template("view_users.html", users=all_users)
 
-@app.route("/rating/<u_id>")
-def view_ratings(u_id):
-    user_object = model_session.query(model.User).filter_by(user_id=u_id).first()
-    return render_template("movie_library.html", user_object=user_object)
+@app.route("/movies")
+def view_movies():
+    all_movies = model_session.query(model.Movie).all() 
+    return render_template("view_movies.html", movies=all_movies, user_id=session['id'])
+
+
+@app.route("/rate/<movie_id>")
+def display_rating_form(movie_id):
+    movie_object = model_session.query(model.Movie).filter_by(movie_id=movie_id).first()
+    return render_template("rate_movie.html", movie_object=movie_object)
+
+@app.route("/rate/<movie_id>", methods=["POST"])
+def submit_rating(movie_id):
+    rating = request.form.get("rating")
+    print "Rating: ", rating
+    new_table_rating = model.Rating(movie_id=movie_id, rating=rating, user_id=session['id'])
+    model_session.add(new_table_rating)
+    model_session.commit()
+    print "Rating added successfully!"
+    return redirect("/movies")
 
 if __name__=="__main__":
     app.run(debug=True)
