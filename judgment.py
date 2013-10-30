@@ -22,6 +22,11 @@ def process_login():
         flash("Login incorrect!")
         return redirect("/")
 
+@app.route("/clear")
+def clear_session():
+    session.clear()
+    return redirect("/")
+
 
 @app.route("/register")
 def register():
@@ -50,8 +55,8 @@ def view_users():
 @app.route("/movies")
 def view_movies():
     all_movies = model_session.query(model.Movie).all() 
-    return render_template("view_movies.html", movies=all_movies, user_id=session['id'])
-
+    user_id = session.get('id', None)
+    return render_template("view_movies.html", movies=all_movies, user_id=user_id)
 
 @app.route("/rate/<movie_id>")
 def display_rating_form(movie_id):

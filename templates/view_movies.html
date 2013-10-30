@@ -4,7 +4,6 @@
     {% if user_id %}   
     <li> Title: <a href="/rate/{{movie.movie_id}}">{{movie.title}}</a>, Release Date: {{movie.release_date}}</li>
     {% else %}
-    <p><em>Please log in to rate</em></p>
     <li> Title: {{movie.title}}, Release Date: {{movie.release_date}}</li>
     {% endif %}
 {% endfor %}
