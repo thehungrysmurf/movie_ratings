@@ -25,6 +25,40 @@ class User(Base):
     age = Column(Integer, nullable = True)
     zip_code = Column(String(15), nullable = True)
 
+    def similarity(user_object_1, user_object_2):
+        d = {}
+        common_list = []
+
+        for rating in user_object_1.ratings:
+            d[rating.movie_id] = rating.rating
+
+        for rating in user_object_2.ratings:
+            if d.get(rating.movie_id):
+                common_list.append((d[rating.movie_id], rating.rating))
+
+        if common_list:
+            return correlation.pearson(common_list)
+        else:
+            return 0.0
+
+    def predict_rating(self, movie):
+        ratings = self.ratings # ratings object for the user that we want prediction for
+        other_ratings = movie.movie_ratings # all rating objects for the movie object
+        other_users = [r.user for r in other_ratings]# list of user objects who rated that movie
+
+        similarities = [(self.similarity(other_user), other_user) for other_user in other_users] # list of tuples of [(similarity, user_object)]
+        similarities.sort(reverse=True) # sorted list starting with [(highest sim, user obj)]
+
+        top_user = similarities[1] # tuple of sim, user object
+
+        matched_rating = None
+        for rating in other_ratings:
+            if rating.user_id == top_user[1].user_id: # find the rating for that user_id and this movie
+                matched_rating = rating
+                break
+        return matched_rating.rating * top_user[0]  
+
+
 class Movie(Base):
     __tablename__ = "movies"
 
@@ -32,7 +66,6 @@ class Movie(Base):
     title = Column(String(64), nullable = True)
     release_date = Column(DateTime, nullable = True)
     imdb_url = Column(String(100), nullable = True)
-
 
 class Rating(Base):
     __tablename__ = "ratings"
@@ -44,6 +77,7 @@ class Rating(Base):
 
     user = relationship("User", backref=backref("ratings", order_by=user_id))
     movie = relationship("Movie", backref=backref("movie_ratings", order_by=movie_id))
+
 
 ### End class declarations
 
