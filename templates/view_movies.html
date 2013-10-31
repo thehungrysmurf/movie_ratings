@@ -1,4 +1,13 @@
 <html>
+
+<head>
+    <title>Movie Ratings</title>
+     <link href="/static/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+<h2>All the movies</h2>
 <ul>
 {% for movie in movies|sort(attribute='title') %} 
     {% if user_id %}   
@@ -8,6 +17,8 @@
     {% endif %}
 {% endfor %}
 </ul>
+</div>
+</body>
 </html>
 
 

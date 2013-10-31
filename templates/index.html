@@ -1,18 +1,30 @@
 <html>
-<form method = "POST">
-    <label>Email</label>
-        <input type="text" name="email"><br />
-    <label>Password</label>
-        <input type = "password" name="password"><br />
-    <input type="submit" value="Submit">
-    Not a user? <a href="{{url_for('register')}}">Register</a> a new account
-</form>
+<head>
+    <title>Movie Ratings</title>
+     <link href="/static/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+
+    <form class="form-signin" method = "POST">
+        <h2 class="signin-heading">The other IMDb</h2>
+        <label>Email</label>
+            <input type="text" class="form-control" name="email"><br />
+        <label>Password</label>
+            <input type = "password" class="form-control" name="password"><br />
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+        Not a user? <a href="{{url_for('register')}}">Register</a> a new account
+    </form>
+
 {% for message in get_flashed_messages() %}
-{{message}}
+<p style="color:red"><strong>{{message}}</strong></p>
 {% endfor %}
 
 <a href="{{url_for('view_users')}}">View all users</a>
 <br />
 <a href="{{url_for('view_movies')}}">View all movies</a>
+</div>
+</body>
 
 </html>

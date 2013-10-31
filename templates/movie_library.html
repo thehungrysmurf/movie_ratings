@@ -1,4 +1,11 @@
 <html>
+<head>
+    <title>Movie Ratings</title>
+     <link href="/static/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
 <h2>Movie Library for user with id # {{user_object.user_id}}</h2>
 {% for movie in all_movies|sort(attribute='title') %}
     {% if rated_movies.get(movie.movie_id) %}
@@ -7,4 +14,7 @@
         <p style="color:blue"><a href = "/rate/{{movie.movie_id}}">{{movie.title}}</a></p>
     {% endif %}
 {% endfor %}
+
+</div>
+</body>
 </html>

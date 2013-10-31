@@ -1,18 +1,29 @@
 <html>
-<h2>Register</h2>
-<form method="POST">
-    <label>New User Email</label>
-        <input type="text" name="email"><br />
-    <label>Password</label>
-        <input type = "password" placeholder="Password" name="password"><br />
-    <input type="password" placeholder="Verify Password" name="password_verify">
-    <label>Age</label>
-        <input type="text" name="age"><br />
-    <label>Gender</label>
-        <input type="text" name="gender"><br />
-    <label>Zipcode</label>
-        <input type="text" name="zipcode"><br />
 
-    <input type="submit" value="Submit">
-</form>
+<head>
+    <title>Movie Ratings</title>
+     <link href="/static/css/bootstrap.css" rel="stylesheet">
+</head>
+
+<body>
+<div class="container">
+    <h2 class="siginin-heading">Register</h2>
+    <form class="form-signin" method="POST">
+        <label>New User Email</label>
+            <input type="text" class="form-control" name="email"><br />
+        <label>Password</label>
+            <input type = "password" class="form-control" placeholder="Password" name="password"><br />
+        <input type="password" class="form-control" placeholder="Verify Password" name="password_verify"><br />
+        <label>Age</label>
+            <input type="text" class="form-control" name="age"><br />
+        <label>Gender</label>
+            <input type="text" class="form-control" name="gender"><br />
+        <label>Zipcode</label>
+            <input type="text" class="form-control" name="zipcode"><br />
+
+        <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit">
+    </form>
+
+</div>
+</body>
 </html>
