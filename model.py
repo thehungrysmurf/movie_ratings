@@ -42,7 +42,9 @@ class User(Base):
             return 0.0
 
     def predict_rating(self, movie):
+        """takes in a movie object and returns a predicted rating from 1 to 5"""
         ratings = self.ratings # ratings object for the user that we want prediction for
+
         other_ratings = movie.movie_ratings # all rating objects for the movie object
         
         similarities = [(self.similarity(r.user), r) for r in other_ratings] 

@@ -60,15 +60,9 @@ def user_movies(user_id):
     rated_movies = {}
     for rating_object in user_object.ratings:
         rated_movies[rating_object.movie_id] = rating_object.rating
+    
+    return render_template("movie_library.html", rated_movies=rated_movies, all_movies=all_movies, user_object=user_object)
 
-    un_rated_movies = {}
-    for movie in all_movies:
-        if rated_movies.get(movie.movie_id) == None:
-            un_rated_movies[movie.movie_id] = user_object.predict_rating(movie)
-
-    return render_template("movie_library.html", rated_movies=rated_movies, un_rated_movies=un_rated_movies, all_movies=all_movies, user_object=user_object)
-
-# put ids of movies that have been rated in a dictionary as keys (if ids are not in the dictionary, then they haven't been rated)
 # remember to fix the release date to only display year
 
 @app.route("/movies")
@@ -81,8 +75,14 @@ def view_movies():
 
 @app.route("/rate/<movie_id>")
 def display_rating_form(movie_id):
+    user_id = session['id']
+    user_object = model_session.query(model.User).filter_by(user_id=user_id).first()
     movie_object = model_session.query(model.Movie).filter_by(movie_id=movie_id).first()
-    return render_template("rate_movie.html", movie_object=movie_object)
+    print "USER OBJECT!!!!!!!!!!!!!!!!!!!1", user_object
+    print "MOVIE ID!!!!!!!!!!!!!!!!!!!!!!!!!!1", movie_id
+    prediction = user_object.predict_rating(movie_object)
+
+    return render_template("rate_movie.html", movie_object=movie_object, prediction=prediction)
 
 @app.route("/rate/<movie_id>", methods=["POST"])
 def submit_rating(movie_id):
@@ -92,7 +92,8 @@ def submit_rating(movie_id):
     model_session.add(new_table_rating)
     model_session.commit()
     print "Rating added successfully!"
-    return redirect("/movies")
+    return redirect(url_for("user_movies", user_id=session['id']))
+
 
 if __name__=="__main__":
     app.run(debug=True)
