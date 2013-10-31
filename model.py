@@ -35,8 +35,10 @@ class User(Base):
         for rating in user_object_2.ratings:
             if d.get(rating.movie_id):
                 common_list.append((d[rating.movie_id], rating.rating))
-
+        print "Common list: ", common_list
         if common_list:
+            the_correlation = correlation.pearson(common_list)
+            print "correlation: ", the_correlation
             return correlation.pearson(common_list)
         else:
             return 0.0
@@ -46,11 +48,21 @@ class User(Base):
         ratings = self.ratings # ratings object for the user that we want prediction for
 
         other_ratings = movie.movie_ratings # all rating objects for the movie object
+
+        print "!!!!!!!!!!111other ratings", other_ratings
         
         similarities = [(self.similarity(r.user), r) for r in other_ratings] 
         # list of tuples of [(similarity, rating object)]
         similarities.sort(reverse=True) # sorted list starting with [(highest sim, rating object)]
-        
+        print "!!!!!!similarities:", similarities
+
+        similarities = [sim for sim in similarities if sim[0] > 0]
+
+
+
+        if not similarities:
+            return None
+
         numerator = 0
         for s,r in similarities:
             if s>0:
@@ -58,10 +70,12 @@ class User(Base):
 
         denominator = 0
         for s in similarities:
-            if s>0:
+            if s[0]>0:
                 denominator += s[0]
-        if denominator == 0:
-            return "we failed somehow"
+        
+        # if denominator == 0:
+        #     return None
+
         return numerator / denominator
 
 

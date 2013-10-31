@@ -43,8 +43,6 @@ def create_account():
     user = model.User(email=email, password=password, age=age, zip_code=zipcode, gender=gender)
     model_session.add(user)
     model_session.commit()
-
-    print "Account created successfully!"
     return redirect("/")
 
 @app.route("/users")
@@ -78,8 +76,6 @@ def display_rating_form(movie_id):
     user_id = session['id']
     user_object = model_session.query(model.User).filter_by(user_id=user_id).first()
     movie_object = model_session.query(model.Movie).filter_by(movie_id=movie_id).first()
-    print "USER OBJECT!!!!!!!!!!!!!!!!!!!1", user_object
-    print "MOVIE ID!!!!!!!!!!!!!!!!!!!!!!!!!!1", movie_id
     prediction = user_object.predict_rating(movie_object)
 
     return render_template("rate_movie.html", movie_object=movie_object, prediction=prediction)
@@ -87,11 +83,9 @@ def display_rating_form(movie_id):
 @app.route("/rate/<movie_id>", methods=["POST"])
 def submit_rating(movie_id):
     rating = request.form.get("rating")
-    print "Rating: ", rating
     new_table_rating = model.Rating(movie_id=movie_id, rating=rating, user_id=session['id'])
     model_session.add(new_table_rating)
     model_session.commit()
-    print "Rating added successfully!"
     return redirect(url_for("user_movies", user_id=session['id']))
 
 
