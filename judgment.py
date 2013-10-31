@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session, url_for
 import model
 
 from model import session as model_session
@@ -17,7 +17,7 @@ def process_login():
     if model.authenticate(email, password):
         user_object = model_session.query(model.User).filter_by(email=email).first()
         session['id'] = user_object.user_id
-        return render_template("movie_library.html", user_object=user_object)
+        return redirect(url_for("user_movies", user_id=user_object.user_id))
     else:
         flash("Login incorrect!")
         return redirect("/")
@@ -52,15 +52,32 @@ def view_users():
     all_users = model_session.query(model.User).all() 
     return render_template("view_users.html", users=all_users)
 
+@app.route("/movies/<user_id>")
+def user_movies(user_id):
+    user_object = model_session.query(model.User).filter_by(user_id=user_id).first()
+    all_movies = model_session.query(model.Movie).all()
+
+    rated_movies = {}
+    for rating_object in user_object.ratings:
+        rated_movies[rating_object.movie_id] = rating_object.rating
+
+    un_rated_movies = {}
+    for movie in all_movies:
+        if rated_movies.get(movie.movie_id) == None:
+            un_rated_movies[movie.movie_id] = user_object.predict_rating(movie)
+
+    return render_template("movie_library.html", rated_movies=rated_movies, un_rated_movies=un_rated_movies, all_movies=all_movies, user_object=user_object)
+
+# put ids of movies that have been rated in a dictionary as keys (if ids are not in the dictionary, then they haven't been rated)
+# remember to fix the release date to only display year
+
 @app.route("/movies")
 def view_movies():
     user_id = session.get('id', None)
     all_movies = model_session.query(model.Movie).all()
     user_object = model_session.query(model.User).filter_by(user_id=user_id).first()
-    return render_template("view_movies.html", movies=all_movies, user_id=user_id, user_object=user_object)
+    return render_template("view_movies.html", movies=all_movies, user_object=user_object)
 
-# put ids of movies that have been rated in a dictionary as keys (if ids are not in the dictionary, then they haven't been rated)
-# remember to fix the release date to only display year
 
 @app.route("/rate/<movie_id>")
 def display_rating_form(movie_id):

@@ -58,7 +58,8 @@ class User(Base):
         for s in similarities:
             if s>0:
                 denominator += s[0]
-
+        if denominator == 0:
+            return "we failed somehow"
         return numerator / denominator
 
 

@@ -1,8 +1,10 @@
 <html>
 <h2>Movie Library for user with id # {{user_object.user_id}}</h2>
-<ul>
-{% for rating_object in user_object.ratings %}
-    <li>{{ rating_object.movie.title}} - {{ rating_object.rating }}</li>
+{% for movie in all_movies %}
+    {% if rated_movies.get(movie.movie_id) %}
+        <p style="color:red">{{movie.title}} - {{ rated_movies[movie.movie_id] }}</p>
+    {% else %}
+        <p style="color:blue">{{movie.title}} - Predicted rating: {{ un_rated_movies[movie.movie_id] }}</p>
+    {% endif %}
 {% endfor %}
-</ul>
 </html>
