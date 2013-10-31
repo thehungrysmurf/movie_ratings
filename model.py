@@ -47,12 +47,19 @@ class User(Base):
         
         similarities = [(self.similarity(r.user), r) for r in other_ratings] 
         # list of tuples of [(similarity, rating object)]
-        
         similarities.sort(reverse=True) # sorted list starting with [(highest sim, rating object)]
+        
+        numerator = 0
+        for s,r in similarities:
+            if s>0:
+                numerator += r.rating * s
 
-        top_user = similarities[1] # tuple of sim, rating object
+        denominator = 0
+        for s in similarities:
+            if s>0:
+                denominator += s[0]
 
-        return top_user[1].rating * top_user[0] # rating * similarity
+        return numerator / denominator
 
 
 class Movie(Base):
