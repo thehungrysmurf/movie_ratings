@@ -54,9 +54,13 @@ def view_users():
 
 @app.route("/movies")
 def view_movies():
-    all_movies = model_session.query(model.Movie).all() 
     user_id = session.get('id', None)
-    return render_template("view_movies.html", movies=all_movies, user_id=user_id)
+    all_movies = model_session.query(model.Movie).all()
+    user_object = model_session.query(model.User).filter_by(user_id=user_id).first()
+    return render_template("view_movies.html", movies=all_movies, user_id=user_id, user_object=user_object)
+
+# put ids of movies that have been rated in a dictionary as keys (if ids are not in the dictionary, then they haven't been rated)
+# remember to fix the release date to only display year
 
 @app.route("/rate/<movie_id>")
 def display_rating_form(movie_id):
