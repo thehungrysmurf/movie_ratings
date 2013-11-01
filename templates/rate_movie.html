@@ -1,22 +1,23 @@
 <html>
 <head>
-     <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/bootstrap.css" rel="stylesheet">
+    <link href="/static/css/main.css" rel="stylesheet">
 </head>
 
 <body>
 <div class="container">
-    <h2 class="siginin-heading">Rating for {{movie_object.title}}</h2>
-    <form method="POST">
-        {% if movie_object.movie_ratings.rating %}
-        <p>You have already rated this movie: {{movie_object.movie_ratings.rating}}. If you wish to change your rating, fill out the form below.</p>
+    <h2 class="siginin-heading">Rating for <em>{{movie_object.title}}</em></h2>
+        {% if existing_rating_object %}
+        <p>You have already rated this movie. <strong>Your rating: {{existing_rating_object.rating}}.</strong><br />If you want to change your rating, fill out the form below.</p>
         {% else %}
         <p>Here is your predicted rating for this movie: {{ prediction }}</p>
         {% endif %}
     <p>Enter a 1-5 rating for the movie:
+    <form class="form-signin" method="POST">
     <input type="text" class="form-control" name="rating">
     <input type="submit" class="btn btn-lg btn-primary btn-block" value="Submit"></p>
     </form>
-
 </div>
 </body>
 </html>
+

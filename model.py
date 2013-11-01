@@ -25,20 +25,20 @@ class User(Base):
     age = Column(Integer, nullable = True)
     zip_code = Column(String(15), nullable = True)
 
-    def similarity(user_object_1, user_object_2):
+    def similarity(self, user_object_2):
+        """takes in a user object and returns a correlation from -1 to 1, 
+        -1 being dissimilar and 1 being most similar"""
         d = {}
         common_list = []
 
-        for rating in user_object_1.ratings:
+        for rating in self.ratings:
             d[rating.movie_id] = rating.rating
 
         for rating in user_object_2.ratings:
             if d.get(rating.movie_id):
                 common_list.append((d[rating.movie_id], rating.rating))
-        print "Common list: ", common_list
+        
         if common_list:
-            the_correlation = correlation.pearson(common_list)
-            print "correlation: ", the_correlation
             return correlation.pearson(common_list)
         else:
             return 0.0
@@ -49,16 +49,11 @@ class User(Base):
 
         other_ratings = movie.movie_ratings # all rating objects for the movie object
 
-        print "!!!!!!!!!!111other ratings", other_ratings
-        
         similarities = [(self.similarity(r.user), r) for r in other_ratings] 
         # list of tuples of [(similarity, rating object)]
         similarities.sort(reverse=True) # sorted list starting with [(highest sim, rating object)]
-        print "!!!!!!similarities:", similarities
 
         similarities = [sim for sim in similarities if sim[0] > 0]
-
-
 
         if not similarities:
             return None
@@ -72,12 +67,8 @@ class User(Base):
         for s in similarities:
             if s[0]>0:
                 denominator += s[0]
-        
-        # if denominator == 0:
-        #     return None
 
         return numerator / denominator
-
 
 class Movie(Base):
     __tablename__ = "movies"

@@ -1,0 +1,12 @@
+
+# in judgment.py
+    #sql alchemy query to get predicted rating, add to existing dictionary or make new predictions_dictionary
+        # in production environment, get predicted ratings for 10-20 movie
+        # display rated and unrated movies in separate dictionaries, loop through them separately in the view
+
+# in model:
+# def find_user_predictions():
+# for every user calculate all predicted ratings
+# create new table, predicted ratings, or add column to ratings table
+
+# handler @app.route("/run_predictions")

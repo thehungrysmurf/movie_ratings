@@ -9,7 +9,7 @@
 <h2>Movie Library for user with id # {{user_object.user_id}}</h2>
 {% for movie in all_movies|sort(attribute='title') %}
     {% if rated_movies.get(movie.movie_id) %}
-        <p style="color:red">{{movie.title}} - Your rating:{{ rated_movies[movie.movie_id] }}</p>
+        <p style="color:red"><a style="color:red" href = "/rate/{{movie.movie_id}}">{{movie.title}}</a> - Your rating:{{ rated_movies[movie.movie_id] }}</p>
     {% else %}
         <p style="color:blue"><a href = "/rate/{{movie.movie_id}}">{{movie.title}}</a></p>
     {% endif %}

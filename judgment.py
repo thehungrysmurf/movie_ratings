@@ -3,11 +3,15 @@ import model
 
 from model import session as model_session
 
+from datetime import datetime
+
 app = Flask(__name__)
 app.secret_key = "blahblahblah"
 
 @app.route("/")
 def index():
+    if session.get('id', None):
+        return redirect(url_for("user_movies", user_id=session['id']))
     return render_template("index.html")
 
 @app.route("/", methods=["POST"])
@@ -77,8 +81,9 @@ def display_rating_form(movie_id):
     user_object = model_session.query(model.User).filter_by(user_id=user_id).first()
     movie_object = model_session.query(model.Movie).filter_by(movie_id=movie_id).first()
     prediction = user_object.predict_rating(movie_object)
+    existing_rating_object = model_session.query(model.Rating).filter_by(user_id=user_id, movie_id=movie_object.movie_id).first()
 
-    return render_template("rate_movie.html", movie_object=movie_object, prediction=prediction)
+    return render_template("rate_movie.html", movie_object=movie_object, prediction=prediction, user_object=user_object, existing_rating_object=existing_rating_object)
 
 @app.route("/rate/<movie_id>", methods=["POST"])
 def submit_rating(movie_id):
@@ -88,6 +93,10 @@ def submit_rating(movie_id):
     model_session.commit()
     return redirect(url_for("user_movies", user_id=session['id']))
 
+
+# @app.template_filter("datefilter")
+# def datefilter(dt):    
+#     return datetime.datetime(dt)
 
 if __name__=="__main__":
     app.run(debug=True)
